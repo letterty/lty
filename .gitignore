@@ -60,3 +60,6 @@ build-iPhoneSimulator/
 
 # locked gem versions
 Gemfile.lock
+
+# vim swaps
+*.swp
