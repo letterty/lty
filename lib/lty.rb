@@ -7,8 +7,8 @@ module Lty
   class Error < StandardError; end
 
   class Article
-    attr_accessor :head
-    attr_accessor :body
+    attr_accessor :head,
+                  :body
 
     def initialize(xml)
       @xml = xml
@@ -27,8 +27,8 @@ module Lty
   end
 
   class Head
-    attr_accessor :title
-    attr_accessor :lead
+    attr_accessor :title,
+                  :lead
 
     def initialize(xml)
       @xml = xml
