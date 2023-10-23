@@ -63,3 +63,4 @@ Gemfile.lock
 
 # vim swaps
 *.swp
+.session.vim

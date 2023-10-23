@@ -44,18 +44,26 @@ module Lty
     def initialize(xml)
       @xml = xml
 
-      self.paragraphs = xml.xpath('p').map { |pxml|
+      self.paragraphs = xml.xpath('b').map { |pxml|
         Paragraph.new(pxml)
       }
     end
   end
 
+  LEGAL_KINDS = Set.new(%w[header paragraph]).freeze
+
   class Paragraph
     attr_accessor :content
+    attr_accessor :kind
 
     def initialize(xml)
       @xml = xml
 
+      if (kind_attr = xml.attribute('kind'))
+        kind = kind_attr.value
+        fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
+        self.kind = kind
+      end
       self.content = xml.text
     end
   end

@@ -27,8 +27,14 @@ RSpec.describe Lty do
 
       it "parses paragraphs" do
         expect(body.paragraphs[0].content).to eq('Where are the birds? They are flying.')
-        expect(body.paragraphs[1].content).to eq('Flying high in the sky, it\'s blue as far as your eyes can see.')
-        expect(body.paragraphs[2].content).to eq('And it\'s also fun, of course.')
+        expect(body.paragraphs[0].kind).to be_nil
+
+        expect(body.paragraphs[1].content).to eq('I know the names of the birds. Maybe?')
+        expect(body.paragraphs[1].kind).to eq('header')
+
+        expect(body.paragraphs[2].content).to eq('Flying high in the sky, it\'s blue as far as your eyes can see.')
+
+        expect(body.paragraphs[3].content).to eq('And it\'s also fun, of course.')
       end
     end
   end
