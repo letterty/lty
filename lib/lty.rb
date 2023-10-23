@@ -24,6 +24,12 @@ module Lty
 
       return self.new(xml)
     end
+
+    def self.from_text(text)
+      xml = Nokogiri::XML(text)
+
+      return self.new(xml)
+    end
   end
 
   class Head
