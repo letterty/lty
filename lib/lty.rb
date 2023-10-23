@@ -50,7 +50,7 @@ module Lty
     end
   end
 
-  LEGAL_KINDS = Set.new(%w[header paragraph]).freeze
+  LEGAL_KINDS = Set.new(%w[header paragraph quote]).freeze
 
   class Paragraph
     attr_accessor :content

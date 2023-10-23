@@ -33,6 +33,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[1].kind).to eq('header')
 
         expect(body.paragraphs[2].content).to eq('Flying high in the sky, it\'s blue as far as your eyes can see.')
+        expect(body.paragraphs[2].kind).to eq('quote')
 
         expect(body.paragraphs[3].content).to eq('And it\'s also fun, of course.')
       end
