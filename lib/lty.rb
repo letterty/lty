@@ -99,7 +99,7 @@ module Lty
                 if node_sentence == current_sentence
                   text_links << TextLink.new(node_sentence)
 
-                  self.sentences << Sentence.new(text_links)
+                  self.sentences << Sentence.new(current_sentence, text_links)
                   current_sentence_idx += 1
                   current_sentence_part = ''
                   current_sentence = flat_sentences[current_sentence_idx]
@@ -137,7 +137,7 @@ module Lty
         end
 
         if (current_sentence_part != '') && (current_sentence_part == current_sentence)
-          self.sentences << Sentence.new(text_links)
+          self.sentences << Sentence.new(current_sentence, text_links)
           current_sentence_idx += 1
           current_sentence_part = ''
           text_links = []
@@ -162,18 +162,22 @@ module Lty
   end
 
   class Sentence
-    attr_accessor :text_links
+    attr_accessor :text,
+                  :text_links
 
-    def initialize(text_links)
+    def initialize(text, text_links)
+      @text = text
       @text_links = text_links
     end
 
     def ==(other)
-      self.text_links == other.text_links
+      (self.text == other.text) &&
+        (self.text_links == other.text_links)
     end
 
     def to_h
       {
+        text: self.text,
         text_links: self.text_links.map(&:to_h)
       }
     end

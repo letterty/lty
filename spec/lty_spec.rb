@@ -29,6 +29,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[0].to_h).to eq({
           sentences: [
             {
+              text: "Where are the birds?",
               text_links: [
                 {
                   text: 'Where are the birds?'
@@ -36,6 +37,7 @@ RSpec.describe Lty do
               ]
             },
             {
+              text: 'They are flying.',
               text_links: [
                 {
                   text: 'They are flying.'
@@ -49,6 +51,7 @@ RSpec.describe Lty do
           kind: 'header',
           sentences: [
             {
+              text: 'I know the names of the birds.',
               text_links: [
                 {
                   text: 'I know the names of the birds.'
@@ -56,6 +59,7 @@ RSpec.describe Lty do
               ]
             },
             {
+              text: 'Maybe?',
               text_links: [
                 {
                   text: 'Maybe?'
@@ -69,6 +73,7 @@ RSpec.describe Lty do
           kind: 'quote',
           sentences: [
             {
+              text: 'Flying high in the sky, it\'s blue as far as your eyes can see.',
               text_links: [
                 {
                   text: 'Flying high in the sky, it\'s blue as far as your eyes can see.'
@@ -81,6 +86,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[3].to_h).to eq({
           sentences: [
             {
+              text: "And it's also fun, of course.",
               text_links: [
                 {
                   text: "And it's "
@@ -107,6 +113,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[4].to_h).to eq({
           sentences: [
             {
+              text: "No link.",
               text_links: [
                 {
                   text: "No link."
@@ -114,6 +121,7 @@ RSpec.describe Lty do
               ]
             },
             {
+              text: "No link again.",
               text_links: [
                 {
                   text: "No link again.",
@@ -121,6 +129,7 @@ RSpec.describe Lty do
               ]
             },
             {
+              text: "Some link.",
               text_links: [
                 {
                   text: "Some "
@@ -135,6 +144,7 @@ RSpec.describe Lty do
               ]
             },
             {
+              text: "Full sentence as a link.",
               text_links: [
                 {
                   text: "Full sentence as a link.",
@@ -148,6 +158,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[5].to_h).to eq({
           sentences: [
             {
+              text: "Links, one, off.",
               text_links: [
                 {
                   text: "Links, "
