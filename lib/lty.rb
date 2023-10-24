@@ -74,7 +74,7 @@ module Lty
         self.kind = kind
       end
 
-      paragraph_flat = xml.to_s
+      paragraph_flat = xml.text
       flat_sentences = self.class.text_paragraph_to_sentences(paragraph_flat)
       current_sentence_idx = 0
       current_sentence_part = ''
@@ -155,8 +155,8 @@ module Lty
       hash
     end
 
-    def self.text_paragraph_to_sentences(text_paragraph, clean: true)
-      ps = PragmaticSegmenter::Segmenter.new(text: text_paragraph, clean: clean)
+    def self.text_paragraph_to_sentences(text_paragraph)
+      ps = PragmaticSegmenter::Segmenter.new(text: text_paragraph, clean: false)
       return ps.segment
     end
   end
