@@ -29,20 +29,10 @@ RSpec.describe Lty do
         expect(body.paragraphs[0].to_h).to eq({
           sentences: [
             {
-              text: "Where are the birds?",
-              text_links: [
-                {
-                  text: 'Where are the birds?'
-                }
-              ]
+              text: "Where are the birds?"
             },
             {
-              text: 'They are flying.',
-              text_links: [
-                {
-                  text: 'They are flying.'
-                }
-              ]
+              text: 'They are flying.'
             }
           ]
         })
@@ -51,20 +41,10 @@ RSpec.describe Lty do
           kind: 'header',
           sentences: [
             {
-              text: 'I know the names of the birds.',
-              text_links: [
-                {
-                  text: 'I know the names of the birds.'
-                }
-              ]
+              text: 'I know the names of the birds.'
             },
             {
-              text: 'Maybe?',
-              text_links: [
-                {
-                  text: 'Maybe?'
-                }
-              ]
+              text: 'Maybe?'
             }
           ]
         })
@@ -73,12 +53,7 @@ RSpec.describe Lty do
           kind: 'quote',
           sentences: [
             {
-              text: 'Flying high in the sky, it\'s blue as far as your eyes can see.',
-              text_links: [
-                {
-                  text: 'Flying high in the sky, it\'s blue as far as your eyes can see.'
-                }
-              ]
+              text: 'Flying high in the sky, it\'s blue as far as your eyes can see.'
             },
           ]
         })
@@ -113,20 +88,10 @@ RSpec.describe Lty do
         expect(body.paragraphs[4].to_h).to eq({
           sentences: [
             {
-              text: "No link.",
-              text_links: [
-                {
-                  text: "No link."
-                }
-              ]
+              text: "No link."
             },
             {
-              text: "No link again.",
-              text_links: [
-                {
-                  text: "No link again.",
-                }
-              ]
+              text: "No link again."
             },
             {
               text: "Some link.",

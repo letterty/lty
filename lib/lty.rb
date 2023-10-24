@@ -167,7 +167,10 @@ module Lty
 
     def initialize(text, text_links)
       @text = text
-      @text_links = text_links
+      if (text_links.length > 0) &&
+          text_links.map(&:link).any?
+        @text_links = text_links
+      end
     end
 
     def ==(other)
@@ -176,10 +179,15 @@ module Lty
     end
 
     def to_h
-      {
-        text: self.text,
-        text_links: self.text_links.map(&:to_h)
+      hash = {
+        text: self.text
       }
+
+      if self.text_links
+        hash[:text_links] = self.text_links.map(&:to_h) 
+      end
+
+      hash
     end
   end
 
