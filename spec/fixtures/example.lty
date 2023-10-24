@@ -7,6 +7,6 @@
     <b>Where are the birds? They are flying.</b>
     <b kind="header">I know the names of the birds. Maybe?</b>
     <b kind="quote">Flying high in the sky, it's blue as far as your eyes can see.</b>
-    <b>And it's also fun, of course.</b>
+    <b>And it's <link url="https://example.fun">also fun</link>, of course.</b>
   </body>
 </lty>

@@ -56,11 +56,38 @@ module Lty
     end
   end
 
+  class Link
+    attr_accessor :from,
+                  :to,
+                  :url
+
+    def initialize(from:, to:, url:)
+      @from = from
+      @to = to
+      @url = url
+    end
+    
+    def ==(other)
+      (self.from == other.from) &&
+        (self.to == other.to) &&
+        (self.url == other.url)
+    end
+
+    def to_h
+      {
+        from: from,
+        to: to,
+        url: url
+      }
+    end
+  end
+
   LEGAL_KINDS = Set.new(%w[header paragraph quote]).freeze
 
   class Paragraph
-    attr_accessor :content
-    attr_accessor :kind
+    attr_accessor :content,
+                  :kind,
+                  :links
 
     def initialize(xml)
       @xml = xml
@@ -70,7 +97,43 @@ module Lty
         fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
         self.kind = kind
       end
-      self.content = xml.text
+
+      # Initialize an empty array to store link data for this block
+      self.links = []
+
+      # Initialize a cursor to keep track of the character position within the text
+      cursor = 0
+
+      # This will hold the final text for this block, with the anchor tags removed
+      self.content = ''
+
+      xml.children.each do |node|
+        if node.node_type == Nokogiri::XML::Node::TEXT_NODE
+          # If it's a text node, just append its text to the final output
+          self.content += node.text
+          cursor += node.text.length
+        elsif node.node_type == Nokogiri::XML::Node::ELEMENT_NODE && node.name == 'link'
+          # If it's a link tag, record its position, text, and href
+          start_pos = cursor
+          link_text = node.text
+          end_pos = start_pos + link_text.length
+
+          # Append the link text to the final output
+          self.content += link_text
+
+          # Record the link data
+          links << Link.new(
+            from: start_pos,
+            to: end_pos,
+            url: node['url']
+          )
+
+          # Move the cursor to the end of the link text
+          cursor = end_pos
+        else
+          fail "Unsupported node #{node.inspect}"
+        end
+      end
     end
   end
 end

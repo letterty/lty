@@ -36,6 +36,7 @@ RSpec.describe Lty do
         expect(body.paragraphs[2].kind).to eq('quote')
 
         expect(body.paragraphs[3].content).to eq('And it\'s also fun, of course.')
+        expect(body.paragraphs[3].links).to eq([Lty::Link.new(from: 9, to: 17, url: 'https://example.fun')])
       end
     end
   end
