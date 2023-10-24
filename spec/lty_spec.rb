@@ -26,17 +26,150 @@ RSpec.describe Lty do
       let(:body) { article.body }
 
       it "parses paragraphs" do
-        expect(body.paragraphs[0].content).to eq('Where are the birds? They are flying.')
-        expect(body.paragraphs[0].kind).to be_nil
+        expect(body.paragraphs[0].to_h).to eq({
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: 'Where are the birds?'
+                }
+              ]
+            },
+            {
+              text_links: [
+                {
+                  text: 'They are flying.'
+                }
+              ]
+            }
+          ]
+        })
 
-        expect(body.paragraphs[1].content).to eq('I know the names of the birds. Maybe?')
-        expect(body.paragraphs[1].kind).to eq('header')
+        expect(body.paragraphs[1].to_h).to eq({
+          kind: 'header',
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: 'I know the names of the birds.'
+                }
+              ]
+            },
+            {
+              text_links: [
+                {
+                  text: 'Maybe?'
+                }
+              ]
+            }
+          ]
+        })
 
-        expect(body.paragraphs[2].content).to eq('Flying high in the sky, it\'s blue as far as your eyes can see.')
-        expect(body.paragraphs[2].kind).to eq('quote')
+        expect(body.paragraphs[2].to_h).to eq({
+          kind: 'quote',
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: 'Flying high in the sky, it\'s blue as far as your eyes can see.'
+                }
+              ]
+            },
+          ]
+        })
 
-        expect(body.paragraphs[3].content).to eq('And it\'s also fun, of course.')
-        expect(body.paragraphs[3].links).to eq([Lty::Link.new(from: 9, to: 17, url: 'https://example.fun')])
+        expect(body.paragraphs[3].to_h).to eq({
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: "And it's "
+                },
+                {
+                  text: "also fun",
+                  link: "https://example.fun"
+                },
+                {
+                  text: ", of "
+                },
+                {
+                  text: "course",
+                  link: "https://example.com"
+                },
+                {
+                  text: '.'
+                }
+              ]
+            }
+          ]
+        })
+
+        expect(body.paragraphs[4].to_h).to eq({
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: "No link."
+                }
+              ]
+            },
+            {
+              text_links: [
+                {
+                  text: "No link again.",
+                }
+              ]
+            },
+            {
+              text_links: [
+                {
+                  text: "Some "
+                },
+                {
+                  text: "link",
+                  link: "https://example.link"
+                },
+                {
+                  text: '. '
+                }
+              ]
+            },
+            {
+              text_links: [
+                {
+                  text: "Full sentence as a link.",
+                  link: "https://example.full"
+                }
+              ]
+            }
+          ]
+        })
+
+        expect(body.paragraphs[5].to_h).to eq({
+          sentences: [
+            {
+              text_links: [
+                {
+                  text: "Links, "
+                },
+                {
+                  text: "one",
+                  link: "https://example1.link"
+                },
+                {
+                  text: ", "
+                },
+                {
+                  text: "off",
+                  link: "https://example2.link"
+                },
+                {
+                  text: "."
+                }
+              ]
+            }
+          ]
+        })
       end
     end
   end

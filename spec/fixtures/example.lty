@@ -7,6 +7,8 @@
     <b>Where are the birds? They are flying.</b>
     <b kind="header">I know the names of the birds. Maybe?</b>
     <b kind="quote">Flying high in the sky, it's blue as far as your eyes can see.</b>
-    <b>And it's <link url="https://example.fun">also fun</link>, of course.</b>
+    <b>And it's <link url="https://example.fun">also fun</link>, of <link url="https://example.com">course</link>.</b>
+    <b>No link. No link again. Some <link url="https://example.link">link</link>. <link url="https://example.full">Full sentence as a link.</link></b>
+    <b>Links, <link url="https://example1.link">one</link>, <link url="https://example2.link">off</link>.</b>
   </body>
 </lty>
