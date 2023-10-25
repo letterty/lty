@@ -104,7 +104,7 @@ RSpec.describe Lty do
                   link: "https://example.link"
                 },
                 {
-                  text: '. '
+                  text: '.'
                 }
               ]
             },

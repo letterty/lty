@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 require 'pragmatic_segmenter'
+require 'byebug'
 
 require_relative "lty/version"
 
@@ -68,6 +69,44 @@ module Lty
                   :sentences
 
     def initialize(xml)
+      @xml = xml
+      self.sentences = []
+
+      if (kind_attr = xml.attribute('kind'))
+        kind = kind_attr.value
+        fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
+        self.kind = kind
+      end
+
+      paragraph_text = xml.children.to_s
+      sentences = self.class.text_paragraph_to_sentences(paragraph_text)
+
+      sentences.each do |sentence|
+        sxml = Nokogiri::XML("<x>#{sentence}</x>")
+
+        text = sxml.text
+        text_links = []
+
+        sxml.at('//x').children.each do |node|
+          case node.node_type
+            when Nokogiri::XML::Node::TEXT_NODE
+              text_links << TextLink.new(node.text) 
+            when Nokogiri::XML::Node::ELEMENT_NODE
+              if node.name == 'link'
+                text_links << TextLink.new(node.text, node['url']) 
+              else
+                fail "Unsupported node name: #{node.name.inspect}"
+              end
+            else
+              fail "Unsupported node type: #{node.node_type.inspect}"
+          end
+        end
+
+        self.sentences << Sentence.new(text, text_links) unless text == ""
+      end
+    end
+
+    def old_initialize(xml)
       @xml = xml
       self.sentences = []
 
