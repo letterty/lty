@@ -41,8 +41,11 @@ module Lty
     def initialize(xml)
       @xml = xml
 
-      self.title = xml.at('title').text
-      self.lead  = xml.at('lead').text
+      title = xml.at('title')
+      self.title = title.text if title
+
+      lead = xml.at('lead')
+      self.lead = lead.text if lead
     end
   end
 
