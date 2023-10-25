@@ -2,7 +2,6 @@
 
 require 'nokogiri'
 require 'pragmatic_segmenter'
-require 'byebug'
 
 require_relative "lty/version"
 
