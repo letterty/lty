@@ -10,5 +10,6 @@
     <b>And it's <link url="https://example.fun">also fun</link>, of <link url="https://example.com">course</link>.</b>
     <b>No link. No link again. Some <link url="https://example.link">link</link>. <link url="https://example.full">Full sentence as a link.</link></b>
     <b>Links, <link url="https://example1.link">one</link>, <link url="https://example2.link">off</link>.</b>
+    <b kind="header" level="2">Level 2</b>
   </body>
 </lty>

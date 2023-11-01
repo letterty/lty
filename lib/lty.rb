@@ -65,6 +65,7 @@ module Lty
 
   class Paragraph
     attr_accessor :kind,
+                  :level, # and this makes me feel they should be different nodes (p, header) in the end :P
                   :sentences
 
     def initialize(xml)
@@ -75,6 +76,12 @@ module Lty
         kind = kind_attr.value
         fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
         self.kind = kind
+      end
+
+      if (level_attr = xml.attribute('level'))
+        level = level_attr.value.to_i
+        fail "Number should be within 1-6" unless level.between?(1, 6)
+        self.level = level
       end
 
       paragraph_text = xml.children.to_s
@@ -192,6 +199,7 @@ module Lty
       }
 
       hash[:kind] = self.kind if self.kind
+      hash[:level] = self.level if self.level
 
       hash
     end

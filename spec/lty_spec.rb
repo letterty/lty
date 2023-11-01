@@ -146,6 +146,16 @@ RSpec.describe Lty do
             }
           ]
         })
+
+        expect(body.paragraphs[6].to_h).to eq({
+          kind: "header",
+          level: 2,
+          sentences: [
+            {
+              text: "Level 2"
+            }
+          ]
+        })
       end
     end
   end
