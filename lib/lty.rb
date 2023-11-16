@@ -55,7 +55,7 @@ module Lty
     def initialize(xml)
       @xml = xml
 
-      self.paragraphs = xml.xpath('b').map { |pxml|
+      self.paragraphs = xml.xpath('bl').map { |pxml|
         Paragraph.new(pxml)
       }
     end
