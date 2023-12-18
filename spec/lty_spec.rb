@@ -156,6 +156,20 @@ RSpec.describe Lty do
             }
           ]
         })
+
+        expect(body.paragraphs[7].to_h).to eq({
+          sentences: [
+            {
+              text: "Run-on sentences."
+            },
+            {
+              text: "Like this."
+            },
+            {
+              text: "12 Work."
+            }
+          ]
+        })
       end
     end
   end

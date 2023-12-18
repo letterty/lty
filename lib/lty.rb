@@ -205,7 +205,14 @@ module Lty
     end
 
     def self.text_paragraph_to_sentences(text_paragraph)
-      ps = PragmaticSegmenter::Segmenter.new(text: text_paragraph, clean: false)
+      lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
+
+      cleaned_text_paragraph =
+        lm::Cleaner.new(text: text_paragraph, language: lm)
+          .send(:check_for_no_space_in_between_sentences)
+
+      ps = PragmaticSegmenter::Segmenter.new(text: cleaned_text_paragraph, clean: false)
+
       return ps.segment
     end
   end
