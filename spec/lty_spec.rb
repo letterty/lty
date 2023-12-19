@@ -180,7 +180,21 @@ RSpec.describe Lty do
               text: '"Quotes.'
             },
             {
-              text: 'Are separate."'
+              text: 'Are separate".'
+            }
+          ]
+        })
+
+        expect(body.paragraphs[9].to_h).to eq({
+          sentences: [
+            {
+              text: "Sentences with."
+            },
+            {
+              text: '"Quotes.'
+            },
+            {
+              text: 'Are separate ."'
             }
           ]
         })

@@ -8,17 +8,48 @@ require_relative "lty/version"
 module Lty
   class Error < StandardError; end
 
-  LANGUAGE_MODEL = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
-  CONFIG = {
-    segmenter: lambda { |paragraph_text|
-      cleaned_text_paragraph =
-        LANGUAGE_MODEL::Cleaner.new(text: paragraph_text, language: LANGUAGE_MODEL)
-          .send(:check_for_no_space_in_between_sentences)
+  class SentenceSegmenter
+    def initialize()
+      @lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
+    end
 
+    def call(text, final = false)
+      cleaner = @lm::Cleaner.new(text: text, language: @lm)
+      cleaned_text_paragraph = cleaner.send(:check_for_no_space_in_between_sentences)
       ps = PragmaticSegmenter::Segmenter.new(text: cleaned_text_paragraph, clean: false)
+      sentences = ps.segment
 
-      return ps.segment
-    }
+      if final
+        return sentences
+      end
+
+      final_sentences = []
+
+      # Double pass, because PragmaticSegmenter doesn't handle multiple sentences within quote marks
+      sentences.each do |sentence|
+        if sentence[0] == '"'
+          reparsed_sentences = self.call(sentence[1..-1], true)
+          if reparsed_sentences.length > 1
+            reparsed_sentences[0] = '"' + reparsed_sentences[0]
+            final_sentences += reparsed_sentences
+          else
+            final_sentences << sentence
+          end
+        else
+          final_sentences << sentence
+        end
+      end
+
+      if (text[-1] == '"') && (final_sentences[-1][-1] != '"')
+        final_sentences[-1] = final_sentences[-1] + '"'
+      end
+
+      return final_sentences
+    end
+  end
+
+  CONFIG = {
+    segmenter: SentenceSegmenter.new
   }
 
   class Article
