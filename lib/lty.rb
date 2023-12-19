@@ -8,6 +8,19 @@ require_relative "lty/version"
 module Lty
   class Error < StandardError; end
 
+  LANGUAGE_MODEL = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
+  CONFIG = {
+    segmenter: lambda { |paragraph_text|
+      cleaned_text_paragraph =
+        LANGUAGE_MODEL::Cleaner.new(text: paragraph_text, language: LANGUAGE_MODEL)
+          .send(:check_for_no_space_in_between_sentences)
+
+      ps = PragmaticSegmenter::Segmenter.new(text: cleaned_text_paragraph, clean: false)
+
+      return ps.segment
+    }
+  }
+
   class Article
     attr_accessor :head,
                   :body
@@ -85,7 +98,7 @@ module Lty
       end
 
       paragraph_text = xml.children.to_s
-      sentences = self.class.text_paragraph_to_sentences(paragraph_text)
+      sentences = ::Lty::CONFIG[:segmenter].call(paragraph_text)
 
       sentences.each do |sentence|
         sxml = Nokogiri::XML("<x>#{sentence}</x>")
@@ -121,18 +134,6 @@ module Lty
       hash[:level] = self.level if self.level
 
       hash
-    end
-
-    def self.text_paragraph_to_sentences(text_paragraph)
-      lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
-
-      cleaned_text_paragraph =
-        lm::Cleaner.new(text: text_paragraph, language: lm)
-          .send(:check_for_no_space_in_between_sentences)
-
-      ps = PragmaticSegmenter::Segmenter.new(text: text_paragraph, clean: false)
-
-      return ps.segment
     end
   end
 
