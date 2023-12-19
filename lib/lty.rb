@@ -112,87 +112,6 @@ module Lty
       end
     end
 
-    def old_initialize(xml)
-      @xml = xml
-      self.sentences = []
-
-      if (kind_attr = xml.attribute('kind'))
-        kind = kind_attr.value
-        fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
-        self.kind = kind
-      end
-
-      paragraph_flat = xml.text
-      flat_sentences = self.class.text_paragraph_to_sentences(paragraph_flat)
-      current_sentence_idx = 0
-      current_sentence_part = ''
-      text_links = []
-
-      xml.children.each do |node|
-        current_sentence = flat_sentences[current_sentence_idx]
-
-        case node.node_type
-          when Nokogiri::XML::Node::TEXT_NODE
-            if node.text == current_sentence
-              text_links << TextLink.new(node.text)
-              current_sentence_part += node.text.dup
-            else # multiple sentences in text node
-              node_sentences = self.class.text_paragraph_to_sentences(node.text)
-              if node_sentences.empty? # something small
-                text_links << TextLink.new(node.text)
-                current_sentence_part += node.text.dup
-              end
-
-              node_sentences.each_with_index do |node_sentence, node_sentence_idx|
-                if node_sentence == current_sentence
-                  text_links << TextLink.new(node_sentence)
-
-                  self.sentences << Sentence.new(current_sentence, text_links)
-                  current_sentence_idx += 1
-                  current_sentence_part = ''
-                  current_sentence = flat_sentences[current_sentence_idx]
-                  text_links = []
-                elsif node_sentence_idx == 0
-                  text_links << TextLink.new(node.text)
-                  current_sentence_part += node.text.dup
-                else
-                  parsed_pos = node_sentences[0..node_sentence_idx - 1].map(&:length).sum + 1
-                  node_sentence_chunk = node.text[parsed_pos..-1]
-                  if current_sentence_part == ''
-                    node_sentence_chunk.lstrip! # Remove spaces from the beginning
-                  end
-                  current_sentence_part += node_sentence_chunk.dup
-                  text_links << TextLink.new(node_sentence_chunk)
-                end
-              end
-            end
-          when Nokogiri::XML::Node::ELEMENT_NODE
-            if node.name == 'link'
-              text_links << TextLink.new(node.text, node['url'])
-              current_sentence_part += node.text.dup
-            else
-              fail "Unsupported node name: #{node.name.inspect}"
-            end
-          else
-            fail "Unsupported node type: #{node.node_type.inspect}"
-        end
-
-        if current_sentence && (current_sentence_part.length > current_sentence.length) # likely trailing spaces
-          current_sentence_part.rstrip!
-          if current_sentence_part.length > current_sentence.length # if still too long, then no luck
-            fail "I think I'm lost comparing #{current_sentence_part.inspect} with #{current_sentence.inspect}"
-          end
-        end
-
-        if (current_sentence_part != '') && (current_sentence_part == current_sentence)
-          self.sentences << Sentence.new(current_sentence, text_links)
-          current_sentence_idx += 1
-          current_sentence_part = ''
-          text_links = []
-        end
-      end
-    end
-
     def to_h
       hash = {
         sentences: self.sentences.map(&:to_h)
@@ -211,7 +130,7 @@ module Lty
         lm::Cleaner.new(text: text_paragraph, language: lm)
           .send(:check_for_no_space_in_between_sentences)
 
-      ps = PragmaticSegmenter::Segmenter.new(text: cleaned_text_paragraph, clean: false)
+      ps = PragmaticSegmenter::Segmenter.new(text: text_paragraph, clean: false)
 
       return ps.segment
     end
