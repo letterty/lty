@@ -198,6 +198,38 @@ RSpec.describe Lty do
             }
           ]
         })
+
+        expect(body.paragraphs[10].to_h).to eq({
+          sentences: [
+            {
+              text: "Sentence"
+            },
+            {
+              text: "\n",
+            },
+            {
+              text: 'And a linked newline.',
+              text_links: [
+                {
+                  text: 'And a '
+                },
+                {
+                  text: 'linked newline',
+                  link: 'https://example.com/bananas'
+                },
+                {
+                  text: '.'
+                }
+              ]
+            },
+            {
+              text: "\n",
+            },
+            {
+              text: ';for real'
+            }
+          ]
+        })
       end
     end
   end

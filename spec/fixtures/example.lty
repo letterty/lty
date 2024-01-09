@@ -14,5 +14,6 @@
     <bl>Run-on sentences.Like this. 12 Work.</bl>
     <bl>Sentences with. "Quotes. Are separate".</bl>
     <bl>Sentences with. "Quotes. Are separate ."</bl>
+    <bl>Sentence<br/>And a <link url="https://example.com/bananas">linked newline</link>.<br/>;for real</bl>
   </body>
 </lty>

@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 require 'pragmatic_segmenter'
+require 'byebug'
 
 require_relative "lty/version"
 
@@ -128,8 +129,19 @@ module Lty
         self.level = level
       end
 
-      paragraph_text = xml.children.to_s
+      multiline_text = xml.children.to_s
+      paragraph_texts = multiline_text.split('<br/>')
+      paragraph_texts.each_with_index do |paragraph_text, index|
+        if index > 0
+          self.sentences << Sentence.new("\n", [])
+        end
+        self.sentences += self.text_to_sentences(paragraph_text)
+      end
+    end
+
+    def text_to_sentences(paragraph_text)
       sentences = ::Lty::CONFIG[:segmenter].call(paragraph_text)
+      lty_sentences = []
 
       sentences.each do |sentence|
         sxml = Nokogiri::XML("<x>#{sentence}</x>")
@@ -139,21 +151,24 @@ module Lty
 
         sxml.at('//x').children.each do |node|
           case node.node_type
-            when Nokogiri::XML::Node::TEXT_NODE
-              text_links << TextLink.new(node.text) 
-            when Nokogiri::XML::Node::ELEMENT_NODE
-              if node.name == 'link'
-                text_links << TextLink.new(node.text, node['url']) 
-              else
-                fail "Unsupported node name: #{node.name.inspect}"
-              end
+          when Nokogiri::XML::Node::TEXT_NODE
+            text_links << TextLink.new(node.text) 
+          when Nokogiri::XML::Node::ELEMENT_NODE
+            case node.name
+            when 'link'
+              text_links << TextLink.new(node.text, node['url']) 
             else
-              fail "Unsupported node type: #{node.node_type.inspect}"
+              fail "Unsupported node name: #{node.name.inspect}"
+            end
+          else
+            fail "Unsupported node type: #{node.node_type.inspect}"
           end
         end
 
-        self.sentences << Sentence.new(text, text_links) unless text == ""
+        lty_sentences << Sentence.new(text, text_links) unless text == ""
       end
+
+      return lty_sentences
     end
 
     def to_h
