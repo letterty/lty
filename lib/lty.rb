@@ -105,12 +105,13 @@ module Lty
     end
   end
 
-  LEGAL_KINDS = Set.new(%w[header paragraph quote]).freeze
+  LEGAL_KINDS = Set.new(%w[header paragraph quote image]).freeze
 
   class Paragraph
     attr_accessor :kind,
                   :level, # and this makes me feel they should be different nodes (p, header) in the end :P
-                  :sentences
+                  :sentences,
+                  :iid
 
     def initialize(xml)
       @xml = xml
@@ -120,6 +121,11 @@ module Lty
         kind = kind_attr.value
         fail "Unknown kind: #{kind.inspect}" unless LEGAL_KINDS.include?(kind)
         self.kind = kind
+      end
+
+      if self.kind == 'image'
+        self.iid = xml.attribute('iid').value
+        fail "image requires iid" if self.iid.nil? || self.iid.empty?
       end
 
       if (level_attr = xml.attribute('level'))
@@ -177,6 +183,7 @@ module Lty
 
       hash[:kind] = self.kind if self.kind
       hash[:level] = self.level if self.level
+      hash[:iid] = self.iid if self.iid
 
       hash
     end

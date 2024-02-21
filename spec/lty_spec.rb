@@ -230,6 +230,16 @@ RSpec.describe Lty do
             }
           ]
         })
+
+        expect(body.paragraphs[11].to_h).to eq({
+          kind: 'image',
+          iid: '9167c274-d073-11ee-8e2d-e741f5076b97',
+          sentences: [
+            {
+              text: 'This is a caption for an image',
+            }
+          ]
+        })
       end
     end
   end
