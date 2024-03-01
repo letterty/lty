@@ -10,7 +10,8 @@ module Lty
   class Error < StandardError; end
 
   class SentenceSegmenter
-    QUOTES = %w( " “ ” &#x201C; &#x201D; )
+    QUOTES = %w( " “ ” &#x201C; &#x201D; ’ )
+    CLOSING_QUOTES = %w( ” &#x201D; ’ )
 
     def initialize()
       @lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
@@ -35,6 +36,7 @@ module Lty
           if reparsed_sentences.length > 1
             reparsed_sentences[0] = sentence[0] + reparsed_sentences[0]
 
+
             final_sentences += reparsed_sentences
           else
             final_sentences << sentence
@@ -44,8 +46,22 @@ module Lty
         end
       end
 
-      if (final_sentences.length > 1) && QUOTES.include?(final_sentences[-1])
-        final_sentences[-2] << final_sentences.delete_at(-1)
+      final_sentences = final_sentences.map { |sentence| CGI.unescapeHTML(sentence) } 
+
+      if final_sentences.length > 1
+        if QUOTES.include?(final_sentences[-1])
+          final_sentences[-2] << final_sentences.delete_at(-1)
+        end
+      end
+
+      final_sentences.each_with_index do |final_sentence, index|
+        if index > 0 &&
+          (final_sentence.length > 1) &&
+          CLOSING_QUOTES.include?(final_sentence[0]) &&
+          (final_sentence[1] == ' ')
+          final_sentences[index - 1] << final_sentence[0]
+          final_sentences[index] = final_sentence[2..-1]
+        end
       end
 
       if QUOTES.include?(text[-1]) && !QUOTES.include?(final_sentences[-1][-1])
