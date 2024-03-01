@@ -240,6 +240,37 @@ RSpec.describe Lty do
             }
           ]
         })
+
+        expect(body.paragraphs[12].to_h).to eq({
+          sentences: [
+            {
+              text: "Sentences with curly."
+            },
+            {
+              text: '“Quotes.'
+            },
+            {
+              text: 'Are separate.”'
+            }
+          ]
+        })
+
+        expect(body.paragraphs[13].to_h).to eq({
+          sentences: [
+            {
+              text: "Sentences with curly."
+            },
+            {
+              text: '“Quotes.'
+            },
+            {
+              text: 'Are separate.”'
+            },
+            {
+              text: "And nice."
+            }
+          ]
+        })
       end
     end
   end

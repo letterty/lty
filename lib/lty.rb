@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# encoding: UTF-8
 
 require 'nokogiri'
 require 'pragmatic_segmenter'
@@ -9,6 +10,8 @@ module Lty
   class Error < StandardError; end
 
   class SentenceSegmenter
+    QUOTES = %w( " “ ” &#x201C; &#x201D; )
+
     def initialize()
       @lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
     end
@@ -27,10 +30,11 @@ module Lty
 
       # Double pass, because PragmaticSegmenter doesn't handle multiple sentences within quote marks
       sentences.each do |sentence|
-        if sentence[0] == '"'
+        if QUOTES.include?(sentence[0])
           reparsed_sentences = self.call(sentence[1..-1], true)
           if reparsed_sentences.length > 1
-            reparsed_sentences[0] = '"' + reparsed_sentences[0]
+            reparsed_sentences[0] = sentence[0] + reparsed_sentences[0]
+
             final_sentences += reparsed_sentences
           else
             final_sentences << sentence
@@ -40,8 +44,12 @@ module Lty
         end
       end
 
-      if (text[-1] == '"') && (final_sentences[-1][-1] != '"')
-        final_sentences[-1] = final_sentences[-1] + '"'
+      if (final_sentences.length > 1) && QUOTES.include?(final_sentences[-1])
+        final_sentences[-2] << final_sentences.delete_at(-1)
+      end
+
+      if QUOTES.include?(text[-1]) && !QUOTES.include?(final_sentences[-1][-1])
+        final_sentences[-1] << text[-1]
       end
 
       return final_sentences
