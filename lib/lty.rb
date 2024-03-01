@@ -10,8 +10,8 @@ module Lty
   class Error < StandardError; end
 
   class SentenceSegmenter
-    QUOTES = %w( " “ ” &#x201C; &#x201D; ’ )
-    CLOSING_QUOTES = %w( ” &#x201D; ’ )
+    QUOTES = %w( " “ ” ’ )
+    CLOSING_QUOTES = %w( ” ’ )
 
     def initialize()
       @lm = PragmaticSegmenter::Languages.get_language_by_code('en') # English hardcoded for now
