@@ -3,6 +3,7 @@
 
 require 'nokogiri'
 require 'pragmatic_segmenter'
+require 'date_core'
 
 require_relative "lty/version"
 
@@ -104,7 +105,8 @@ module Lty
 
   class Head
     attr_accessor :title,
-                  :lead
+                  :lead,
+                  :source
 
     def initialize(xml)
       @xml = xml
@@ -114,6 +116,19 @@ module Lty
 
       lead = xml.at('lead')
       self.lead = lead.text if lead
+
+      source_data = {}
+      source = xml.at('source')
+
+      if source
+        source_data[:author] = source.attribute('author')&.value
+        source_data[:image_url] = source.attribute('image_url')&.value
+        source_data[:url] = source.attribute('url')&.value
+        source_created_at = source.attribute('created_at')&.value
+        source_data[:created_at] = source_created_at && DateTime.parse(source_created_at)
+      end
+
+      self.source = source_data
     end
   end
 

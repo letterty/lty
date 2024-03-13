@@ -20,6 +20,15 @@ RSpec.describe Lty do
       it "parses lead" do
         expect(head.lead).to eq('Being a bird is a difficult job. It starts with learning to fly.')
       end
+
+      it "parses source" do
+        expect(head.source).to eq({
+          author: 'Mr Ponky Fonk',
+          image_url: "https://example.com/image/yo.jpg",
+          url: "https://example.com/articles/fonk-ponk.html",
+          created_at: DateTime.parse('2020-01-20')
+        })
+      end
     end
 
     describe "body" do
