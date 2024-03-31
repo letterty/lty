@@ -3,6 +3,11 @@
     <title>How do we learn to fly?</title>
     <lead>Being a bird is a difficult job. It starts with learning to fly.</lead>
     <source author="Mr Ponky Fonk" created_at="2020-01-20" image_url="https://example.com/image/yo.jpg" url="https://example.com/articles/fonk-ponk.html" />
+    <front>
+      An excerpt from the Bananaman Chronicles, p. 2-12.
+      Flufford University Press.
+      Reprinted with permission to land
+    </front>
   </head>
   <body>
     <bl>Where are the birds? They are flying.</bl>

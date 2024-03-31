@@ -21,6 +21,15 @@ RSpec.describe Lty do
         expect(head.lead).to eq('Being a bird is a difficult job. It starts with learning to fly.')
       end
 
+      it "parses front" do
+        front = <<-FRONT
+      An excerpt from the Bananaman Chronicles, p. 2-12.
+      Flufford University Press.
+      Reprinted with permission to land
+        FRONT
+        expect(head.front).to eq(front.strip)
+      end
+
       it "parses source" do
         expect(head.source).to eq({
           author: 'Mr Ponky Fonk',

@@ -106,16 +106,20 @@ module Lty
   class Head
     attr_accessor :title,
                   :lead,
+                  :front,
                   :source
 
     def initialize(xml)
       @xml = xml
 
       title = xml.at('title')
-      self.title = title.text if title
+      self.title = title.text.strip if title
 
       lead = xml.at('lead')
-      self.lead = lead.text if lead
+      self.lead = lead.text.strip if lead
+
+      front = xml.at('front')
+      self.front = front.text.strip if front
 
       source_data = {}
       source = xml.at('source')
