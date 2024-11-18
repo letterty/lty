@@ -4,11 +4,22 @@
 require 'nokogiri'
 require 'pragmatic_segmenter'
 require 'date_core'
+require 'htmlentities'
 
 require_relative "lty/version"
 
 module Lty
   class Error < StandardError; end
+
+  @coder = HTMLEntities.new
+
+  def self.html_escape(html)
+    @coder.encode(html, :basic, :hexadecimal).gsub("&#xa;", "\n")
+  end
+
+  def self.html_unescape(html)
+    @coder.decode(html)
+  end
 
   class SentenceSegmenter
     QUOTES = %w( " “ ” ’ )
@@ -33,7 +44,7 @@ module Lty
       # Double pass, because PragmaticSegmenter doesn't handle multiple sentences within quote marks
       sentences.each do |sentence|
         if QUOTES.include?(sentence[0])
-          reparsed_sentences = self.call(sentence[1..-1], true)
+          reparsed_sentences = self.call(::Lty.html_unescape(sentence)[1..-1], true)
           if reparsed_sentences.length > 1
             reparsed_sentences[0] = sentence[0] + reparsed_sentences[0]
 
@@ -47,26 +58,28 @@ module Lty
         end
       end
 
-      final_sentences = final_sentences.map { |sentence| CGI.unescapeHTML(sentence) } 
-
       if final_sentences.length > 1
-        if QUOTES.include?(final_sentences[-1])
+        if QUOTES.include?(::Lty.html_unescape(final_sentences[-1]))
           final_sentences[-2] << final_sentences.delete_at(-1)
         end
       end
 
       final_sentences.each_with_index do |final_sentence, index|
+        danger_sentence = ::Lty.html_unescape(final_sentence)
         if index > 0 &&
-          (final_sentence.length > 1) &&
-          CLOSING_QUOTES.include?(final_sentence[0]) &&
-          (final_sentence[1] == ' ')
-          final_sentences[index - 1] << final_sentence[0]
-          final_sentences[index] = final_sentence[2..-1]
+          (danger_sentence.length > 1) &&
+          CLOSING_QUOTES.include?(danger_sentence[0]) &&
+          (danger_sentence[1] == ' ')
+
+          escaped_quote = ::Lty.html_escape(danger_sentence[0])
+          final_sentences[index - 1] << escaped_quote
+          final_sentences[index] = final_sentence[(1+escaped_quote.length)..-1]
         end
       end
 
-      if QUOTES.include?(text[-1]) && !QUOTES.include?(final_sentences[-1][-1])
-        final_sentences[-1] << text[-1]
+      danger_text = ::Lty.html_unescape(text)
+      if QUOTES.include?(danger_text[-1]) && !QUOTES.include?(::Lty.html_unescape(final_sentences[-1])[-1])
+        final_sentences[-1] << ::Lty.html_escape(danger_text[-1])
       end
 
       return final_sentences
@@ -232,12 +245,19 @@ module Lty
     end
   end
 
-  class Sentence
-    attr_accessor :text,
-                  :text_links
+  class TextElement
+    attr_accessor :text
+
+    def initialize(text)
+      @text = ::Lty.html_escape(text)
+    end
+  end
+
+  class Sentence < TextElement
+    attr_accessor :text_links
 
     def initialize(text, text_links)
-      @text = text
+      super(text)
       if (text_links.length > 0) &&
           text_links.map(&:link).any?
         @text_links = text_links
@@ -262,12 +282,11 @@ module Lty
     end
   end
 
-  class TextLink
-    attr_accessor :text,
-                  :link
+  class TextLink < TextElement
+    attr_accessor :link
 
     def initialize(text, link = nil)
-      @text = text
+      super(text)
       @link = link
     end
 

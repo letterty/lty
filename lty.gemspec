@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "nokogiri", "~> 1.15"
   spec.add_dependency "pragmatic_segmenter", "~> 0.3.23"
+  spec.add_dependency "htmlentities", "~> 4.3.4"
  
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

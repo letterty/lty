@@ -24,5 +24,6 @@
     <bl kind="image" iid="9167c274-d073-11ee-8e2d-e741f5076b97">This is a caption for an image</bl>
     <bl>Sentences with curly. “Quotes. Are separate.”</bl>
     <bl>Sentences with curly. “Quotes. Are separate.” And nice.</bl>
+    <bl>Sentences with &lt; &amp; &gt; HTML entities and <link url="https://example.com">tags</link>.</bl>
   </body>
 </lty>
