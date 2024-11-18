@@ -249,7 +249,7 @@ module Lty
     attr_accessor :text
 
     def initialize(text)
-      @text = ::Lty.html_escape(text)
+      @text = ::Lty.html_unescape(text)
     end
   end
 

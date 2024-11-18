@@ -71,7 +71,7 @@ RSpec.describe Lty do
           kind: 'quote',
           sentences: [
             {
-              text: 'Flying high in the sky, it&apos;s blue as far as your eyes can see.'
+              text: 'Flying high in the sky, it\'s blue as far as your eyes can see.'
             },
           ]
         })
@@ -79,10 +79,10 @@ RSpec.describe Lty do
         expect(body.paragraphs[3].to_h).to eq({
           sentences: [
             {
-              text: "And it&apos;s also fun, of course.",
+              text: "And it\'s also fun, of course.",
               text_links: [
                 {
-                  text: "And it&apos;s "
+                  text: "And it's "
                 },
                 {
                   text: "also fun",
@@ -195,10 +195,10 @@ RSpec.describe Lty do
               text: "Sentences with."
             },
             {
-              text: '&quot;Quotes.'
+              text: '"Quotes.'
             },
             {
-              text: 'Are separate&quot;.'
+              text: 'Are separate".'
             }
           ]
         })
@@ -209,10 +209,10 @@ RSpec.describe Lty do
               text: "Sentences with."
             },
             {
-              text: '&quot;Quotes.'
+              text: '"Quotes.'
             },
             {
-              text: 'Are separate .&quot;'
+              text: 'Are separate ."'
             }
           ]
         })
@@ -265,10 +265,10 @@ RSpec.describe Lty do
               text: "Sentences with curly."
             },
             {
-              text: '&#x201c;Quotes.'
+              text: '“Quotes.'
             },
             {
-              text: 'Are separate.&#x201d;'
+              text: 'Are separate.”'
             }
           ]
         })
@@ -279,10 +279,10 @@ RSpec.describe Lty do
               text: "Sentences with curly."
             },
             {
-              text: '&#x201c;Quotes.'
+              text: '“Quotes.'
             },
             {
-              text: 'Are separate.&#x201d;'
+              text: 'Are separate.”'
             },
             {
               text: "And nice."
@@ -293,11 +293,11 @@ RSpec.describe Lty do
         expect(body.paragraphs[14].to_h).to eq({
           sentences: [
             {
-              text: "Sentences with &lt; &amp; &gt; HTML entities and tags.",
+              text: "Sentences with < & > HTML entities and tags.",
               text_links:
                 [
                   {
-                    text: "Sentences with &lt; &amp; &gt; HTML entities and "
+                    text: "Sentences with < & > HTML entities and "
                   }, {
                     text: "tags",
                     link: 'https://example.com'
